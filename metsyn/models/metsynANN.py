@@ -37,7 +37,15 @@ verbose=1)
 
 #MLP 모델 결과 도출 및 AUROC, AUPRC 그래프
 Y_pred3 = model.predict(X_val.values)
-metrics.classification_report(Y_val, Y_pred3)
+#
+Y_pred3_hard = []
+for i in range(len(Y_pred3)):
+    if Y_pred3[i] < 0.5:
+        Y_pred3_hard.append(0)
+    else:
+        Y_pred3_hard.append(1)
+
+#
 fpr, tpr, thresholds = metrics.roc_curve(Y_val, Y_pred3, pos_label=1)
 prec, reca, _ = metrics.precision_recall_curve(Y_val, Y_pred3)
 
@@ -57,3 +65,5 @@ plt.legend(loc='lower right')
 plt.title(disease + ' MLP PRC curve')
 
 plt.show()
+
+print(metrics.classification_report(Y_val, Y_pred3_hard))
