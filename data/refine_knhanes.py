@@ -2,10 +2,6 @@
 import copy
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
-
-# target disease
-disease = 'Diab'
 
 # n수 보는 함수
 def find_n(dict):
@@ -15,10 +11,16 @@ def find_n(dict):
         n += dict[year].shape[0]
     print(n)
 
+# 오리지널 데이터 n수
+find_n(df_list)
+
+# target disease
+disease = 'MetaSyn'
+
 # 복사본 생성
 df_list_copy = copy.deepcopy(df_list)
 
-# 20세 이상 대상만 선별
+# 만20세 이상 대상만 선별
 for year in df_list:
     df_list[year] = df_list[year].query('age >= 20')
 
@@ -59,8 +61,9 @@ for year in df_list:
     df_list[year] = df_list[year].query('BE3_31 <= 8')
     df_list[year] = df_list[year].query('BE5_1 <= 8')
     df_list[year] = df_list[year].query('marri_1 <= 2')
-    # df_list[year] = df_list[year].query('marri_2 <= 8')
     df_list[year] = df_list[year].query('house <= 3')
+
+    # df_list[year] = df_list[year].query('marri_2 <= 8')
     # df_list[year] = df_list[year].query('Total_slp_wk <= 1440') # 24시간 이상인 사람 배제
     # df_list[year] = df_list[year].query('BE8_1 <= 24') # 24시간 이상인 사람 배제
     # df_list[year] = df_list[year].query('BE8_2 <= 60') # 60분 이상인 사람 배제
@@ -74,7 +77,7 @@ for year in df_list:
 # BE8_1 : 평소 하루 앉아서 보내는 시간(시간); 5기에 없음
 # BE8_2 : 평소 하루 앉아서 보내는 시간(분); 5기에 없음
 # 대사증후군 돌릴때는 HE_wc;허리둘레 빼기
-conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc']
+conti_factor = ['age', 'HE_BMI', 'HE_PLS']
 
 # 카테고리 변수 리스트
 # BD1_11 : 1년간 음주빈도
@@ -104,10 +107,37 @@ for year in df_list:
 # marri_2 : 결혼상태
 # house : 주택소유여부
 # edu : 교육수준 재분류 코드
-# ho_incm : 소득 4분위수 (가구)
+# ho_incm : 소득 4분위수 (가구); 유의미하지 않다고 나와서 일단 뺌
 # BE3_31 : 1주일간 걷기 일수
 # BE5_1 : 1주일간 근력운동 일수
-cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh', 'BE3_31', 'BE5_1', 'marri_1', 'house', 'edu', 'ho_incm']
+cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # BE3_11 : 1주일간 격렬한 신체활동 일수; 7기에 없음; 2014, 2015 (6기)에도 없음
 # BE3_21 : 1주일간 중등도 신체활동 일수; 7기에 없음; 2014, 2015 (6기)에도 없음
@@ -128,54 +158,3 @@ cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh
 #     df_list[year]['BE3_21'] = [sum([be3_82, be3_86]) if (sum([be3_82, be3_86]) <= 7) else 7 for (be3_82, be3_86) in zip(df_list[year]['BE3_82'], df_list[year]['BE3_86'])]
 # for year in ['2010', '2011', '2012', '2013']:
 #     df_list[year] = df_list[year].query('BE3_11 <= 8 & BE3_21 <= 8 & BE3_31 <= 8')
-
-# Training을 위한 데이터셋 생성
-df_train = {}
-for year in ['2013', '2014', '2015', '2016', '2017', '2018']:
-    # print(year)
-    df_train[year] = df_list[year][conti_factor + cate_factor + [disease]].dropna()
-df = pd.concat(df_train.values())
-# 카테고리 변수의 카테고리화
-cat_df = []
-cat_df.append(df[conti_factor])
-for idx in cate_factor:
-    cat_df.append(pd.get_dummies(df[idx], prefix=idx))
-cat_df.append(df[disease])
-drop_list = []
-# 추가적으로 제거할 변수 이름을 지정하는 곳
-## XGB나 LightGBM의 경우는 drop 하지 않아도 가능
-# drop_list = ['BD1_11_1.0', 'BD1_11_2.0', 'BD1_11_9.0', 'BS3_1_9.0', 'BS3_1_2.0', 'BS3_1_3.0', 'BS3_1_8.0', 'BD1_11_8.0', 'sex_1.0', 'age_50_0']
-df = pd.concat(cat_df, axis=1).drop(drop_list, axis=1)
-# 마지막 column이 질병 label이므로 이를 y로 지정
-X_train = df.iloc[:, :-1]
-Y_train = df.iloc[:, -1]
-
-df_val = {}
-#Validation set에 대해서도 같은 작업
-for year in ['2010', '2011', '2012']:
-    df_val[year] = df_list[year][conti_factor + cate_factor + [disease]].dropna()
-df = pd.concat(df_val.values())
-cat_df = []
-cat_df.append(df[conti_factor])
-for idx in cate_factor:
-    cat_df.append(pd.get_dummies(df[idx], prefix=idx))
-cat_df.append(df[disease])
-df = pd.concat(cat_df, axis=1).drop(drop_list, axis=1)
-X_val = df.iloc[:, :-1]
-Y_val = df.iloc[:, -1]
-conti_count = sum([1 for x in df.columns if x in conti_factor])
-scalar = StandardScaler()
-scalar.fit(X_train.iloc[:, :conti_count])
-# 연속 변수들을 normalization 하고
-# 이에 맞게 validation set을 같이 transform 시킨다
-X_train.iloc[:, :conti_count] = scalar.transform(X_train.iloc[:, :conti_count])
-X_val.iloc[:, :conti_count] = scalar.transform(X_val.iloc[:, :conti_count])
-
-X_train.columns
-print(X_train.shape)
-print(X_val.shape)
-
-# pd.unique(df_train['2017']['marri_1'])
-
-# # for year in df_list:
-# #     print(pd.unique(df_list[year]['marri_1']))
