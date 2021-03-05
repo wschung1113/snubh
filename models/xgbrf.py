@@ -1,6 +1,7 @@
 ##XGB RandomForest
 import xgboost as xgb
 
+data_dmatrix = xgb.DMatrix(data=X_train, label=Y_train)
 #XGB RandomForest의 경우 parameter들을 params 라는 dict형태로 저장
 # learning_rate나 num_parallel_tree 등의 hyperparameter들은 XGB RandomForest API 문서 참조
 # API link: https://xgboost.readthedocs.io/en/latest/tutorials/rf.html

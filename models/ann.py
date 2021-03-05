@@ -30,7 +30,7 @@ history = model.fit(
 X_train.values,
 Y_train.values,
 batch_size=64,
-epochs=10,
+epochs=5,
 validation_data=(X_val, Y_val),
 # verbose = 1을 하면 트레이닝 내용을 볼 수 있음
 verbose=1)
