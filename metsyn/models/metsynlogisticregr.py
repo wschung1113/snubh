@@ -15,10 +15,10 @@ for f in pop_features:
     X_opt.remove(train_features.index(f))
 
 regressor = sm.Logit(Y_train, X_train.iloc[:, X_opt]).fit()
-while (np.max(regressor.pvalues) > 0.05):
-    # p-value가 0.05보다 큰 항목이 있으면 가장 큰 항목부터 backward elimination 시행
-    print(X_train.columns[X_opt.pop(np.argmax(regressor.pvalues))])
-    regressor = sm.Logit(Y_train, X_train.iloc[:,X_opt]).fit()
+# while (np.max(regressor.pvalues) > 0.05):
+#     # p-value가 0.05보다 큰 항목이 있으면 가장 큰 항목부터 backward elimination 시행
+#     print(X_train.columns[X_opt.pop(np.argmax(regressor.pvalues))])
+#     regressor = sm.Logit(Y_train, X_train.iloc[:,X_opt]).fit()
 
 regressor.summary()
 

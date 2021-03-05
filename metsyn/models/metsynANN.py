@@ -1,6 +1,13 @@
 import tensorflow as tf
 from tensorflow import keras
 
+import statsmodels.api as sm
+from sklearn.preprocessing import StandardScaler
+from sklearn import metrics
+
+import matplotlib
+import matplotlib.pyplot as plt
+
 ## MLP 모델 구현
 # tensorflow의 keras form을 사용하여 모델 구현
 # 각 layer들은 임의로 지정한 값
@@ -22,7 +29,7 @@ model.compile(optimizer='adam',
 history = model.fit(
 X_train.values,
 Y_train.values,
-batch_size=128,
+batch_size=64,
 epochs=10,
 validation_data=(X_val, Y_val),
 # verbose = 1을 하면 트레이닝 내용을 볼 수 있음

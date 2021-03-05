@@ -2,6 +2,7 @@
 import copy
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 # n수 함수
 def find_n(dict):
