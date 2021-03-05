@@ -1,3 +1,6 @@
+import os
+import sys
+
 import pandas as pd
 
 # 각 KNHANES 데이터 셋을 불러오기
