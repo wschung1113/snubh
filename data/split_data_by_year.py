@@ -54,3 +54,7 @@ X_val.iloc[:, :conti_count] = scalar.transform(X_val.iloc[:, :conti_count])
 print(X_train.columns)
 print(X_train.shape)
 print(X_val.shape)
+
+# add prevalence of disease
+print(np.sum(Y_train)/len(Y_train))
+print(np.sum(Y_val)/len(Y_val))

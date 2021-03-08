@@ -24,15 +24,14 @@ lgb_params = {
         "bagging_seed" : 2020,
         "verbosity" : -1,
         "max_depth": 18,
-        # "boosting":"rf",
-        "boosting_type":"gbdt",
+        "boosting_type":"dart",
         "min_child_samples":100
     }
 #lgb의 Dataset 구현
 lgb_train = lgb.Dataset(X_train, label=Y_train)
 lgb_val = lgb.Dataset(X_val, label=Y_val)
 evals_result = {}
-model = lgb.train(lgb_params, lgb_train, 2500, valid_sets=[lgb_val], 
+model = lgb.train(lgb_params, lgb_train, 1500, valid_sets=[lgb_val], 
                   early_stopping_rounds=50, verbose_eval=50, evals_result=evals_result)
 
 pred_test_y = model.predict(X_val, num_iteration=model.best_iteration)

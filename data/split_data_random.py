@@ -28,9 +28,13 @@ conti_count = sum([1 for x in df.columns if x in conti_factor])
 scalar = StandardScaler()
 scalar.fit(df_X.iloc[:, :conti_count])
 df_X.iloc[:, :conti_count] = scalar.transform(df_X.iloc[:, :conti_count])
-
-X_train, X_val, Y_train, Y_val = train_test_split(df_X, df_Y, test_size=0.1, random_state=1)
+# random_state = seed
+X_train, X_val, Y_train, Y_val = train_test_split(df_X, df_Y, test_size=0.2. random_state = 1)
 
 print(X_train.columns)
 print(X_train.shape)
 print(X_val.shape)
+
+# add prevalence of disease
+print(np.sum(Y_train)/len(Y_train))
+print(np.sum(Y_val)/len(Y_val))
