@@ -47,7 +47,7 @@ Y_pred3 = model.predict(X_val.values)
 # plot AUROC & AUPRC
 fpr, tpr, thresholds = metrics.roc_curve(Y_val, Y_pred3, pos_label=1)
 prec, reca, _ = metrics.precision_recall_curve(Y_val, Y_pred3)
-plt.figure(figsize=(8, 8))
+plt.figure(figsize=(12, 12))
 plt.plot(fpr, tpr, color='darkorange', label='ROC curve (AUC = %0.3f)' % (metrics.auc(fpr, tpr)))
 plt.plot([0, 1], [0, 1], color='navy', linestyle='--')
 plt.xlim([0.0, 1.0])
