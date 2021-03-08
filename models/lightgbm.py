@@ -1,4 +1,9 @@
 import lightgbm as lgb
+import matplotlib
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from sklearn.preprocessing import StandardScaler
+from sklearn import metrics
 
 ##LightGB 모델
 
@@ -16,11 +21,12 @@ lgb_params = {
         "reg_alpha" : 1.728910519108444,
         "reg_lambda" : 4.9847051755586085,
         "random_state" : 42,
-        "bagging_seed" : 2019,
+        "bagging_seed" : 2020,
         "verbosity" : -1,
         "max_depth": 18,
+        # "boosting":"rf",
+        "boosting_type":"gbdt",
         "min_child_samples":100
-       # ,"boosting":"rf"
     }
 #lgb의 Dataset 구현
 lgb_train = lgb.Dataset(X_train, label=Y_train)
@@ -36,7 +42,7 @@ fpr, tpr, thresholds = metrics.roc_curve(Y_val, pred_test_y, pos_label=1)
 prec, reca, _ = metrics.precision_recall_curve(Y_val, pred_test_y)
 
 plt.figure(figsize=(8, 8))
-plt.plot(fpr, tpr, color='darkorange', label='ROC curve (AUC = %0.2f)' % (metrics.auc(fpr, tpr)))
+plt.plot(fpr, tpr, color='darkorange', label='ROC curve (AUC = %0.3f)' % (metrics.auc(fpr, tpr)))
 plt.plot([0, 1], [0, 1], color='navy', linestyle='--')
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.01])
@@ -44,7 +50,7 @@ plt.legend(loc='lower right')
 plt.title(disease + ' LightGB ROC curve')
 plt.show()
 plt.figure(figsize=(8,8))
-plt.step(reca, prec, label='AUPRC = %0.2f' % (metrics.average_precision_score(Y_val, Y_pred2)))
+plt.step(reca, prec, label='AUPRC = %0.3f' % (metrics.average_precision_score(Y_val, pred_test_y)))
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.01])
 plt.legend(loc='lower right')
