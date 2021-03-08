@@ -77,6 +77,7 @@ for year in df_list:
 # BE8_1 : 평소 하루 앉아서 보내는 시간(시간); 5기에 없음
 # BE8_2 : 평소 하루 앉아서 보내는 시간(분); 5기에 없음
 # 대사증후군 돌릴때는 HE_wc;허리둘레 빼기
+# conti_factor = ['age', 'HE_BMI', 'HE_PLS']
 conti_factor = ['age', 'HE_BMI', 'HE_PLS']
 
 # 카테고리 변수 리스트
@@ -111,7 +112,7 @@ for year in df_list:
 # BE3_31 : 1주일간 걷기 일수
 # BE5_1 : 1주일간 근력운동 일수
 cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh']
-
+# cate_factor = ['sex', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh']
 
 
 

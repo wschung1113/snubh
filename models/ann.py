@@ -1,12 +1,12 @@
 import tensorflow as tf
 from tensorflow import keras
-
 import statsmodels.api as sm
 from sklearn.preprocessing import StandardScaler
 from sklearn import metrics
-
 import matplotlib
 import matplotlib.pyplot as plt
+# from keras.callbacks import EarlyStopping
+# from keras.callbacks import ModelCheckpoint
 
 ## MLP 모델 구현
 # tensorflow의 keras form을 사용하여 모델 구현
@@ -25,13 +25,19 @@ model.compile(optimizer='adam',
              loss=keras.losses.BinaryCrossentropy(),
              metrics=[keras.metrics.AUC()])
 
+callback=tf.keras.callbacks.EarlyStopping(
+    monitor='val_loss', min_delta=0, patience=2, verbose=0,
+    mode='auto', baseline=None, restore_best_weights=False
+)
+
 # 모델 training
 history = model.fit(
 X_train.values,
 Y_train.values,
 batch_size=64,
-epochs=5,
+epochs=20,
 validation_data=(X_val, Y_val),
+callbacks=[callback],
 # verbose = 1을 하면 트레이닝 내용을 볼 수 있음
 verbose=1)
 
