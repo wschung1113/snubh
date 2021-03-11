@@ -19,7 +19,7 @@ fpr, tpr, thresholds = metrics.roc_curve(Y_val, Y_pred, pos_label=1)
 prec, reca, _ = metrics.precision_recall_curve(Y_val, Y_pred)
 
 plt.figure(figsize=(8, 8))
-plt.plot(fpr, tpr, color='darkorange', label='ROC curve (AUC = %0.3f)' % (metrics.auc(fpr, tpr)))
+plt.plot(fpr, tpr, color='darkorange', label='ROC curve (AUC = %0.2f)' % (metrics.auc(fpr, tpr)))
 plt.plot([0, 1], [0, 1], color='navy', linestyle='--')
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.01])
@@ -27,7 +27,7 @@ plt.legend(loc='lower right')
 plt.title(disease + ' XGBReg ROC curve')
 plt.show()
 plt.figure(figsize=(8,8))
-plt.step(reca, prec, label='AUPRC = %0.3f' % (metrics.average_precision_score(Y_val, Y_pred)))
+plt.step(reca, prec, label='AUPRC = %0.2f' % (metrics.average_precision_score(Y_val, Y_pred)))
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.01])
 plt.legend(loc='lower right')
@@ -40,3 +40,8 @@ plt.show()
 xgb.plot_importance(xg_reg)
 plt.rcParams['figure.figsize'] = [5, 5]
 plt.show()
+
+# ㅇㅃ
+# dad = [[57, 24.96494647925858, 20, 80, 5.5, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0]]
+# X_dad = pd.DataFrame(dad, columns = X_train.columns)
+# xg_reg.predict(X_dad)
