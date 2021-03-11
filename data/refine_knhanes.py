@@ -24,6 +24,12 @@ df_list_copy = copy.deepcopy(df_list)
 for year in df_list:
     df_list[year] = df_list[year].query('age >= 20')
 
+# exclusion criteria; 보류; 이유를 찾기 전까지는
+# 뇌졸중
+# for year in df_list:
+#     df_list[year] = df_list[year].query('DI3_dg != 1')
+
+
 # 당뇨병 Label 생성 함수
 def Diab(he_glu, he_hba1c, de1_dg):
     return ((he_glu >= 126) or (he_hba1c >= 6.5) or (de1_dg == 1))
@@ -77,8 +83,8 @@ for year in df_list:
 # BE8_1 : 평소 하루 앉아서 보내는 시간(시간); 5기에 없음
 # BE8_2 : 평소 하루 앉아서 보내는 시간(분); 5기에 없음
 # 대사증후군 돌릴때는 HE_wc;허리둘레 빼기
-# conti_factor = ['age', 'HE_BMI', 'HE_PLS']
-conti_factor = ['age', 'HE_BMI', 'HE_PLS']
+# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc']
+conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'HE_sbp', 'HE_dbp']
 
 # 카테고리 변수 리스트
 # BD1_11 : 1년간 음주빈도
@@ -89,6 +95,7 @@ conti_factor = ['age', 'HE_BMI', 'HE_PLS']
 # HE_HPfh1, 2, 3 : 고혈압 의사진단 여부 (부, 모, 형제)
 # HE_HLfh1, 2, 3 : 고지혈증 의사진단 여부 (부, 모, 형제)
 # HE_DMfh1, 2, 3 : 당뇨병 의사진단 여부 (부, 모, 형제)
+# 뇌졸중, 허혈성심질환
 # 부모형제자매 가족력 여부 변수 생성
 def isHPfh(he_hpfh1, he_hpfh2, he_hpfh3):
     return ((he_hpfh1 == 1) | (he_hpfh2 == 1) | (he_hpfh3 == 1))
@@ -99,10 +106,18 @@ def isHLfh(he_hlfh1, he_hlfh2, he_hlfh3):
 def isDMfh(he_dmfh1, he_dmfh2, he_dmfh3):
     return ((he_dmfh1 == 1) | (he_dmfh2 == 1) | (he_dmfh3 == 1))
 
+def isIHDfh(he_ihdfh1, he_ihdfh2, he_ihdfh3):
+    return ((he_ihdfh1 == 1) | (he_ihdfh2 == 1) | (he_ihdfh3 == 1))
+
+def isSTRfh(he_strfh1, he_strfh2, he_strfh3):
+    return ((he_strfh1 == 1) | (he_strfh2 == 1) | (he_strfh3 == 1))
+
 for year in df_list:
     df_list[year]['HE_HPfh'] = [1 if isHPfh(he_hpfh1, he_hpfh2, he_hpfh3) else 0 for (he_hpfh1, he_hpfh2, he_hpfh3) in zip(df_list[year]['HE_HPfh1'], df_list[year]['HE_HPfh2'], df_list[year]['HE_HPfh3'])]
     df_list[year]['HE_HLfh'] = [1 if isHLfh(he_hlfh1, he_hlfh2, he_hlfh3) else 0 for (he_hlfh1, he_hlfh2, he_hlfh3) in zip(df_list[year]['HE_HLfh1'], df_list[year]['HE_HLfh2'], df_list[year]['HE_HLfh3'])]
     df_list[year]['HE_DMfh'] = [1 if isDMfh(he_dmfh1, he_dmfh2, he_dmfh3) else 0 for (he_dmfh1, he_dmfh2, he_dmfh3) in zip(df_list[year]['HE_DMfh1'], df_list[year]['HE_DMfh2'], df_list[year]['HE_DMfh3'])]
+    df_list[year]['HE_IHDfh'] = [1 if isIHDfh(he_ihdfh1, he_ihdfh2, he_ihdfh3) else 0 for (he_ihdfh1, he_ihdfh2, he_ihdfh3) in zip(df_list[year]['HE_IHDfh1'], df_list[year]['HE_IHDfh2'], df_list[year]['HE_IHDfh3'])]
+    df_list[year]['HE_STRfh'] = [1 if isSTRfh(he_strfh1, he_strfh2, he_strfh3) else 0 for (he_strfh1, he_strfh2, he_strfh3) in zip(df_list[year]['HE_STRfh1'], df_list[year]['HE_STRfh2'], df_list[year]['HE_STRfh3'])]
 
 # marri_1 : 결혼여부
 # marri_2 : 결혼상태
@@ -111,8 +126,8 @@ for year in df_list:
 # ho_incm : 소득 4분위수 (가구); 유의미하지 않다고 나와서 일단 뺌
 # BE3_31 : 1주일간 걷기 일수
 # BE5_1 : 1주일간 근력운동 일수
-cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh']
-# cate_factor = ['sex', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh']
+cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens']
+# cate_factor = ['sex', 'HE_DMfh']
 
 
 

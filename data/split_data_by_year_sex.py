@@ -1,9 +1,14 @@
 # libraries
 import pandas as pd
 import numpy as np
+import copy
 from sklearn.preprocessing import StandardScaler
 
-# from data.refine_knhanes import conti_factor, cate_factor, disease, df_list, find_n
+# from refine_knhanes_sex import conti_factor, cate_factor, disease, df_list, find_n
+
+######################### 성별 바꿀때마다 바꿔주기
+# 트레이닝 할 성별 지정 1 남자 2 여자
+sex = 1
 
 # 각 연도 n수
 find_n(df_list)
@@ -12,16 +17,28 @@ find_n(df_list)
 train_years = ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018']
 val_years = ['2019']
 
+cate_factor_tmp = copy.copy(cate_factor)
+
 ## training data
 df_train = {}
 for year in train_years:
     df_train[year] = df_list[year][conti_factor + cate_factor + [disease]].dropna()
 df = pd.concat(df_train.values())
 
+######################### 성별 바꿀때마다 바꿔주기
+df = df.query('sex == 1')
+# sex drop
+df = df.drop('sex', axis = 1)
+cate_factor_tmp.remove('sex')
+# 생리여부 drop
+if sex == 1:
+    df = df.drop('HE_mens', axis = 1)
+    cate_factor_tmp.remove('HE_mens')
+
 # 카테고리 변수의 카테고리화
 cat_df = []
 cat_df.append(df[conti_factor])
-for idx in cate_factor:
+for idx in cate_factor_tmp:
     cat_df.append(pd.get_dummies(df[idx], prefix=idx))
 cat_df.append(df[disease])
 df = pd.concat(cat_df, axis=1)
@@ -29,14 +46,27 @@ df = pd.concat(cat_df, axis=1)
 X_train = df.iloc[:, :-1]
 Y_train = df.iloc[:, -1]
 
+cate_factor_tmp = copy.copy(cate_factor)
+
 ## validation data
 df_val = {}
 for year in val_years:
     df_val[year] = df_list[year][conti_factor + cate_factor + [disease]].dropna()
 df = pd.concat(df_val.values())
+
+######################### 성별 바꿀때마다 바꿔주기
+df = df.query('sex == 1')
+# sex drop
+df = df.drop('sex', axis = 1)
+cate_factor_tmp.remove('sex')
+# 생리여부 drop
+if sex == 1:
+    df = df.drop('HE_mens', axis = 1)
+    cate_factor_tmp.remove('HE_mens')
+
 cat_df = []
 cat_df.append(df[conti_factor])
-for idx in cate_factor:
+for idx in cate_factor_tmp:
     cat_df.append(pd.get_dummies(df[idx], prefix=idx))
 cat_df.append(df[disease])
 df = pd.concat(cat_df, axis=1)

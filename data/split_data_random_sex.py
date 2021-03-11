@@ -4,7 +4,11 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-from refine_knhanes import conti_factor, cate_factor, disease, df_list
+# from refine_knhanes import conti_factor, cate_factor, disease, df_list
+
+######################### 성별 바꿀때마다 바꿔주기
+sex = 1
+cate_factor_tmp = copy.copy(cate_factor)
 
 # concatenate dictionary into one df
 tmp = {}
@@ -12,10 +16,20 @@ for year in df_list:
     tmp[year] = df_list[year][conti_factor + cate_factor + [disease]].dropna()
 df = pd.concat(tmp.values())
 
+######################### 성별 바꿀때마다 바꿔주기
+df = df.query('sex == 1')
+# sex drop
+df = df.drop('sex', axis = 1)
+cate_factor_tmp.remove('sex')
+# 생리여부 drop
+if sex == 1:
+    df = df.drop('HE_mens', axis = 1)
+    cate_factor_tmp.remove('HE_mens')
+
 # 카테고리 변수의 카테고리화
 cat_df = []
 cat_df.append(df[conti_factor])
-for idx in cate_factor:
+for idx in cate_factor_tmp:
     cat_df.append(pd.get_dummies(df[idx], prefix=idx))
 cat_df.append(df[disease])
 df = pd.concat(cat_df, axis=1)
