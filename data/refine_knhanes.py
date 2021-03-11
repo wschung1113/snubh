@@ -59,6 +59,26 @@ for year in df_list:
     df_list[year]['Diab'] = [1 if Diab(he_glu, he_hba1c, de1_dg) else 0 for (he_glu, he_hba1c, de1_dg) in zip(df_list[year]['HE_glu'], df_list[year]['HE_HbA1c'], df_list[year]['DE1_dg'])]
     df_list[year]['MetaSyn'] = metasyn(df_list[year])
 
+# 연속 변수 리스트
+# BP8 : 하루 평균 수면 시간; 5, 6기
+# Total_slp_wk : 주중 하루 평균 수면 시간 (분);
+# 8기에는 BP16_1 : 주중 하루 평균 수면 시간
+# 7기
+for year in ['2016', '2017', '2018']: 
+    df_list[year]['BP8'] = (df_list[year]['Total_slp_wk']/60*5 + df_list[year]['Total_slp_wd']/60*2)/7
+
+# 8기
+df_list['2019']['BP8'] = (df_list['2019']['BP16_1']*5 + df_list['2019']['BP16_2']*2)/7
+
+
+# HE_PLS : 15초 맥박수
+# HE_mPLS : 60초 맥박수; 결측치가 너~무 많음 그냥 HE_PLS 쓰자;
+# BE8_1 : 평소 하루 앉아서 보내는 시간(시간); 5기에 없음
+# BE8_2 : 평소 하루 앉아서 보내는 시간(분); 5기에 없음
+# 대사증후군 돌릴때는 HE_wc;허리둘레 빼기; 다시 넣기로 함
+# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc']
+conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'HE_sbp', 'HE_dbp', 'BP8']
+
 # 모름/무응답 drop
 for year in df_list:
     df_list[year] = df_list[year].query('BD1_11 <= 8')
@@ -68,6 +88,7 @@ for year in df_list:
     df_list[year] = df_list[year].query('BE5_1 <= 8')
     df_list[year] = df_list[year].query('marri_1 <= 2')
     df_list[year] = df_list[year].query('house <= 3')
+    df_list[year] = df_list[year].query('BP8 <= 24')
 
     # df_list[year] = df_list[year].query('marri_2 <= 8')
     # df_list[year] = df_list[year].query('Total_slp_wk <= 1440') # 24시간 이상인 사람 배제
@@ -75,16 +96,6 @@ for year in df_list:
     # df_list[year] = df_list[year].query('BE8_2 <= 60') # 60분 이상인 사람 배제
     # df_list[year] = df_list[year].query('HE_fh != 9')
     # df_list[year] = df_list[year].query('HE_HPfh1 != 9')
-
-# 연속 변수 리스트
-# Total_slp_wk : 주중 하루 평균 수면 시간; 5, 6기에 없음
-# HE_PLS : 15초 맥박수
-# HE_mPLS : 60초 맥박수; 결측치가 너~무 많음 그냥 HE_PLS 쓰자;
-# BE8_1 : 평소 하루 앉아서 보내는 시간(시간); 5기에 없음
-# BE8_2 : 평소 하루 앉아서 보내는 시간(분); 5기에 없음
-# 대사증후군 돌릴때는 HE_wc;허리둘레 빼기
-# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc']
-conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'HE_sbp', 'HE_dbp']
 
 # 카테고리 변수 리스트
 # BD1_11 : 1년간 음주빈도

@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 
 ######################### 성별 바꿀때마다 바꿔주기
 # 트레이닝 할 성별 지정 1 남자 2 여자
-sex = 1
+sex = 2
 
 # 각 연도 n수
 find_n(df_list)
@@ -26,7 +26,7 @@ for year in train_years:
 df = pd.concat(df_train.values())
 
 ######################### 성별 바꿀때마다 바꿔주기
-df = df.query('sex == 1')
+df = df.query('sex == 2')
 # sex drop
 df = df.drop('sex', axis = 1)
 cate_factor_tmp.remove('sex')
@@ -55,7 +55,7 @@ for year in val_years:
 df = pd.concat(df_val.values())
 
 ######################### 성별 바꿀때마다 바꿔주기
-df = df.query('sex == 1')
+df = df.query('sex == 2')
 # sex drop
 df = df.drop('sex', axis = 1)
 cate_factor_tmp.remove('sex')
