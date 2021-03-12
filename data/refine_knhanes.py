@@ -76,8 +76,8 @@ df_list['2019']['BP8'] = (df_list['2019']['BP16_1']*5 + df_list['2019']['BP16_2'
 # BE8_1 : 평소 하루 앉아서 보내는 시간(시간); 5기에 없음
 # BE8_2 : 평소 하루 앉아서 보내는 시간(분); 5기에 없음
 # 대사증후군 돌릴때는 HE_wc;허리둘레 빼기; 다시 넣기로 함
-conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'BP8']
-# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'HE_sbp', 'HE_dbp', 'BP8']
+# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'BP8']
+conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'HE_sbp', 'HE_dbp', 'BP8']
 
 # 모름/무응답 drop
 for year in df_list:
@@ -137,8 +137,10 @@ for year in df_list:
 # ho_incm : 소득 4분위수 (가구); 유의미하지 않다고 나와서 일단 뺌
 # BE3_31 : 1주일간 걷기 일수
 # BE5_1 : 1주일간 근력운동 일수
-cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens']
-# cate_factor = ['sex', 'HE_DMfh']
+# region : 17개 시도
+# town_t : 동/읍면 구분
+cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'ho_incm', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens', 'region', 'town_t']
+# cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens']
 
 
 

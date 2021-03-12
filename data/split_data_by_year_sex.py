@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 
 # from refine_knhanes_sex import conti_factor, cate_factor, disease, df_list, find_n
 
-######################### 성별 바꿀때마다 바꿔주기
+#################################################### 성별 바꿀때마다 바꿔주기
 # 트레이닝 할 성별 지정 1 남자 2 여자
 sex = 2
 
@@ -25,7 +25,7 @@ for year in train_years:
     df_train[year] = df_list[year][conti_factor + cate_factor + [disease]].dropna()
 df = pd.concat(df_train.values())
 
-######################### 성별 바꿀때마다 바꿔주기
+#################################################### 성별 바꿀때마다 바꿔주기
 df = df.query('sex == 2')
 # sex drop
 df = df.drop('sex', axis = 1)
@@ -54,7 +54,7 @@ for year in val_years:
     df_val[year] = df_list[year][conti_factor + cate_factor + [disease]].dropna()
 df = pd.concat(df_val.values())
 
-######################### 성별 바꿀때마다 바꿔주기
+#################################################### 성별 바꿀때마다 바꿔주기
 df = df.query('sex == 2')
 # sex drop
 df = df.drop('sex', axis = 1)

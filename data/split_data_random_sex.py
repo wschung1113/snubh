@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 # from refine_knhanes import conti_factor, cate_factor, disease, df_list
 
 ######################################################################## 성별 바꿀때마다 바꿔주기
-sex = 1
+sex = 2
 cate_factor_tmp = copy.copy(cate_factor)
 
 # concatenate dictionary into one df
@@ -17,7 +17,7 @@ for year in df_list:
 df = pd.concat(tmp.values())
 
 ######################################################################## 성별 바꿀때마다 바꿔주기
-df = df.query('sex == 1')
+df = df.query('sex == 2')
 # sex drop
 df = df.drop('sex', axis = 1)
 cate_factor_tmp.remove('sex')
