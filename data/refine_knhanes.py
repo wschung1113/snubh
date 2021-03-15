@@ -1,5 +1,6 @@
 # libraries
 import copy
+import math
 import pandas as pd
 import numpy as np
 
@@ -39,7 +40,7 @@ def metasyn(x):
     sex = x['sex']
     sbp = x['HE_sbp']
     dbp = x['HE_dbp']
-    hpdr =  x['DI1_pt']
+    hpdr = x['DI1_pt']
     glu = x['HE_glu']
     dmdr = x['DE1_pt']
     tg = x['HE_TG']
@@ -70,13 +71,17 @@ for year in ['2016', '2017', '2018']:
 # 8기
 df_list['2019']['BP8'] = (df_list['2019']['BP16_1']*5 + df_list['2019']['BP16_2']*2)/7
 
+# 하루 평균 수면시간 반올림
+for year in df_list:
+    df_list[year]['BP8'] = round(df_list[year]['BP8'])
+
 
 # HE_PLS : 15초 맥박수
 # HE_mPLS : 60초 맥박수; 결측치가 너~무 많음 그냥 HE_PLS 쓰자;
 # BE8_1 : 평소 하루 앉아서 보내는 시간(시간); 5기에 없음
 # BE8_2 : 평소 하루 앉아서 보내는 시간(분); 5기에 없음
 # 대사증후군 돌릴때는 HE_wc;허리둘레 빼기; 다시 넣기로 함
-# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'BP8']
+# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'BP8']
 conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'HE_sbp', 'HE_dbp', 'BP8']
 
 # 모름/무응답 drop
@@ -144,8 +149,8 @@ cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'ho_incm', 
 
 
 
-
-
+# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'HE_sbp', 'HE_dbp', 'BP8']
+# cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'ho_incm', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens', 'region', 'town_t']
 
 
 

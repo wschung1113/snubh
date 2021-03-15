@@ -29,8 +29,8 @@ if sex == 1:
 # 카테고리 변수의 카테고리화
 cat_df = []
 cat_df.append(df[conti_factor])
-for idx in cate_factor_tmp:
-    cat_df.append(pd.get_dummies(df[idx], prefix=idx))
+for idx in cate_factor_tmp: # drop_first=True for logistic regression
+    cat_df.append(pd.get_dummies(df[idx], prefix=idx, drop_first=False))
 cat_df.append(df[disease])
 df = pd.concat(cat_df, axis=1)
 
