@@ -13,7 +13,7 @@ def find_n(dict):
     print(n)
 
 # 오리지널 데이터 n수
-find_n(df_list)
+# find_n(df_list)
 
 # target disease
 disease = 'MetaSyn'
@@ -32,8 +32,8 @@ for year in df_list:
 
 
 # 당뇨병 Label 생성 함수
-def Diab(he_glu, he_hba1c, de1_dg):
-    return ((he_glu >= 126) or (he_hba1c >= 6.5) or (de1_dg == 1))
+# def Diab(he_glu, he_hba1c, de1_dg):
+#     return ((he_glu >= 126) or (he_hba1c >= 6.5) or (de1_dg == 1))
 
 # 대사증후군 Label 생성 함수
 def metasyn(x):
@@ -49,15 +49,15 @@ def metasyn(x):
     wc = x['HE_wc']
     return (sum([
         ((sbp >= 130) | (dbp >= 85) | (hpdr == 1)),
-        ((glu >= 100) | (dmdr == 1)),
+        ((glu >= 110) | (dmdr == 1)),
         ((tg >= 150) | (hldr == 1)),
         ((sex == 1) & (hdl < 40)) | ((sex == 2) & (hdl < 50)),
-        ((sex == 1) & (wc >= 90)) | ((sex == 2) & (wc >= 85)),
+        ((sex == 1) & (wc >= 90)) | ((sex == 2) & (wc >= 80)),
     ]) >= 3).astype(int)
 
 # 각 연도별 dataset에 대해 'disease' Label 생성
 for year in df_list:
-    df_list[year]['Diab'] = [1 if Diab(he_glu, he_hba1c, de1_dg) else 0 for (he_glu, he_hba1c, de1_dg) in zip(df_list[year]['HE_glu'], df_list[year]['HE_HbA1c'], df_list[year]['DE1_dg'])]
+    # df_list[year]['Diab'] = [1 if Diab(he_glu, he_hba1c, de1_dg) else 0 for (he_glu, he_hba1c, de1_dg) in zip(df_list[year]['HE_glu'], df_list[year]['HE_HbA1c'], df_list[year]['DE1_dg'])]
     df_list[year]['MetaSyn'] = metasyn(df_list[year])
 
 # 연속 변수 리스트
@@ -65,15 +65,15 @@ for year in df_list:
 # Total_slp_wk : 주중 하루 평균 수면 시간 (분);
 # 8기에는 BP16_1 : 주중 하루 평균 수면 시간
 # 7기
-for year in ['2016', '2017', '2018']: 
-    df_list[year]['BP8'] = (df_list[year]['Total_slp_wk']/60*5 + df_list[year]['Total_slp_wd']/60*2)/7
+# for year in ['2016', '2017', '2018']: 
+#     df_list[year]['BP8'] = (df_list[year]['Total_slp_wk']/60*5 + df_list[year]['Total_slp_wd']/60*2)/7
 
-# 8기
-df_list['2019']['BP8'] = (df_list['2019']['BP16_1']*5 + df_list['2019']['BP16_2']*2)/7
+# # 8기
+# df_list['2019']['BP8'] = (df_list['2019']['BP16_1']*5 + df_list['2019']['BP16_2']*2)/7
 
-# 하루 평균 수면시간 반올림
-for year in df_list:
-    df_list[year]['BP8'] = round(df_list[year]['BP8'])
+# # 하루 평균 수면시간 반올림
+# for year in df_list:
+#     df_list[year]['BP8'] = round(df_list[year]['BP8'])
 
 
 # HE_PLS : 15초 맥박수
@@ -84,24 +84,24 @@ for year in df_list:
 # 대사증후군 돌릴때는 HE_wc;허리둘레 빼기; 다시 넣기로 함
 # BP 관련 변수들은 lab test 결과로 치부하고 제외; 허리둘레는 역인과성이 성립되지 않기에 포함
 # conti_factor = ['age', 'HE_BMI', 'HE_wc', 'HE_sbp', 'HE_dbp']
-conti_factor = ['age', 'HE_BMI', 'HE_wc', 'HE_PLS']
+
 
 # 모름/무응답 drop
-for year in df_list:
-    df_list[year] = df_list[year].query('BD1_11 <= 8')
-    df_list[year] = df_list[year].query('BD2_1 <= 8')
-    df_list[year] = df_list[year].query('BS3_1 <= 8')
-    df_list[year] = df_list[year].query('BE3_31 <= 8')
-    df_list[year] = df_list[year].query('BE5_1 <= 8')
-    df_list[year] = df_list[year].query('marri_1 <= 2')
-    df_list[year] = df_list[year].query('house <= 3')
-    df_list[year] = df_list[year].query('BP8 <= 24')
-    # df_list[year] = df_list[year].query('marri_2 <= 8')
-    # df_list[year] = df_list[year].query('Total_slp_wk <= 1440') # 24시간 이상인 사람 배제
-    # df_list[year] = df_list[year].query('BE8_1 <= 24') # 24시간 이상인 사람 배제
-    # df_list[year] = df_list[year].query('BE8_2 <= 60') # 60분 이상인 사람 배제
-    # df_list[year] = df_list[year].query('HE_fh != 9')
-    # df_list[year] = df_list[year].query('HE_HPfh1 != 9')
+# for year in df_list:
+#     df_list[year] = df_list[year].query('BD1_11 <= 8')
+#     df_list[year] = df_list[year].query('BD2_1 <= 8')
+#     df_list[year] = df_list[year].query('BS3_1 <= 8')
+#     df_list[year] = df_list[year].query('BE3_31 <= 8')
+#     df_list[year] = df_list[year].query('BE5_1 <= 8')
+#     df_list[year] = df_list[year].query('marri_1 <= 2')
+#     df_list[year] = df_list[year].query('house <= 3')
+#     df_list[year] = df_list[year].query('BP8 <= 24')
+#     df_list[year] = df_list[year].query('marri_2 <= 8')
+#     df_list[year] = df_list[year].query('Total_slp_wk <= 1440') # 24시간 이상인 사람 배제
+#     df_list[year] = df_list[year].query('BE8_1 <= 24') # 24시간 이상인 사람 배제
+#     df_list[year] = df_list[year].query('BE8_2 <= 60') # 60분 이상인 사람 배제
+#     df_list[year] = df_list[year].query('HE_fh != 9')
+#     df_list[year] = df_list[year].query('HE_HPfh1 != 9')
 
 # 카테고리 변수 리스트
 # BD1_11 : 1년간 음주빈도
@@ -116,21 +116,21 @@ for year in df_list:
 # 부모형제자매 가족력 여부 변수 생성
 def isHPfh(he_hpfh1, he_hpfh2, he_hpfh3):
     return ((he_hpfh1 == 1) | (he_hpfh2 == 1) | (he_hpfh3 == 1))
-def isHLfh(he_hlfh1, he_hlfh2, he_hlfh3):
-    return ((he_hlfh1 == 1) | (he_hlfh2 == 1) | (he_hlfh3 == 1))
+# def isHLfh(he_hlfh1, he_hlfh2, he_hlfh3):
+#     return ((he_hlfh1 == 1) | (he_hlfh2 == 1) | (he_hlfh3 == 1))
 def isDMfh(he_dmfh1, he_dmfh2, he_dmfh3):
     return ((he_dmfh1 == 1) | (he_dmfh2 == 1) | (he_dmfh3 == 1))
-def isIHDfh(he_ihdfh1, he_ihdfh2, he_ihdfh3):
-    return ((he_ihdfh1 == 1) | (he_ihdfh2 == 1) | (he_ihdfh3 == 1))
-def isSTRfh(he_strfh1, he_strfh2, he_strfh3):
-    return ((he_strfh1 == 1) | (he_strfh2 == 1) | (he_strfh3 == 1))
+# def isIHDfh(he_ihdfh1, he_ihdfh2, he_ihdfh3):
+#     return ((he_ihdfh1 == 1) | (he_ihdfh2 == 1) | (he_ihdfh3 == 1))
+# def isSTRfh(he_strfh1, he_strfh2, he_strfh3):
+#     return ((he_strfh1 == 1) | (he_strfh2 == 1) | (he_strfh3 == 1))
 
 for year in df_list:
     df_list[year]['HE_HPfh'] = [1 if isHPfh(he_hpfh1, he_hpfh2, he_hpfh3) else 0 for (he_hpfh1, he_hpfh2, he_hpfh3) in zip(df_list[year]['HE_HPfh1'], df_list[year]['HE_HPfh2'], df_list[year]['HE_HPfh3'])]
-    df_list[year]['HE_HLfh'] = [1 if isHLfh(he_hlfh1, he_hlfh2, he_hlfh3) else 0 for (he_hlfh1, he_hlfh2, he_hlfh3) in zip(df_list[year]['HE_HLfh1'], df_list[year]['HE_HLfh2'], df_list[year]['HE_HLfh3'])]
+    # df_list[year]['HE_HLfh'] = [1 if isHLfh(he_hlfh1, he_hlfh2, he_hlfh3) else 0 for (he_hlfh1, he_hlfh2, he_hlfh3) in zip(df_list[year]['HE_HLfh1'], df_list[year]['HE_HLfh2'], df_list[year]['HE_HLfh3'])]
     df_list[year]['HE_DMfh'] = [1 if isDMfh(he_dmfh1, he_dmfh2, he_dmfh3) else 0 for (he_dmfh1, he_dmfh2, he_dmfh3) in zip(df_list[year]['HE_DMfh1'], df_list[year]['HE_DMfh2'], df_list[year]['HE_DMfh3'])]
-    df_list[year]['HE_IHDfh'] = [1 if isIHDfh(he_ihdfh1, he_ihdfh2, he_ihdfh3) else 0 for (he_ihdfh1, he_ihdfh2, he_ihdfh3) in zip(df_list[year]['HE_IHDfh1'], df_list[year]['HE_IHDfh2'], df_list[year]['HE_IHDfh3'])]
-    df_list[year]['HE_STRfh'] = [1 if isSTRfh(he_strfh1, he_strfh2, he_strfh3) else 0 for (he_strfh1, he_strfh2, he_strfh3) in zip(df_list[year]['HE_STRfh1'], df_list[year]['HE_STRfh2'], df_list[year]['HE_STRfh3'])]
+    # df_list[year]['HE_IHDfh'] = [1 if isIHDfh(he_ihdfh1, he_ihdfh2, he_ihdfh3) else 0 for (he_ihdfh1, he_ihdfh2, he_ihdfh3) in zip(df_list[year]['HE_IHDfh1'], df_list[year]['HE_IHDfh2'], df_list[year]['HE_IHDfh3'])]
+    # df_list[year]['HE_STRfh'] = [1 if isSTRfh(he_strfh1, he_strfh2, he_strfh3) else 0 for (he_strfh1, he_strfh2, he_strfh3) in zip(df_list[year]['HE_STRfh1'], df_list[year]['HE_STRfh2'], df_list[year]['HE_STRfh3'])]
 
 # marri_1 : 결혼여부
 # marri_2 : 결혼상태
@@ -160,5 +160,6 @@ for year in df_list:
 #     df_list[year]['age_cat'] = df_list[year].apply(lambda x: categorize_age(x['age']), axis = 1)
 
 # cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'ho_incm', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_DMfh', 'HE_HLfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens', 'region', 'town_t']
+conti_factor = ['age', 'HE_BMI', 'HE_wc', 'HE_PLS']
 cate_factor = ['sex', 'edu', 'HE_HPfh', 'HE_DMfh', 'HE_mens']
 
