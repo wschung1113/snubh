@@ -80,9 +80,11 @@ for year in df_list:
 # HE_mPLS : 60초 맥박수; 결측치가 너~무 많음 그냥 HE_PLS 쓰자;
 # BE8_1 : 평소 하루 앉아서 보내는 시간(시간); 5기에 없음
 # BE8_2 : 평소 하루 앉아서 보내는 시간(분); 5기에 없음
+# HE_sbp/dbp : 수축/이완 혈압
 # 대사증후군 돌릴때는 HE_wc;허리둘레 빼기; 다시 넣기로 함
-# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'BP8']
-conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'HE_sbp', 'HE_dbp', 'BP8']
+# BP 관련 변수들은 lab test 결과로 치부하고 제외; 허리둘레는 역인과성이 성립되지 않기에 포함
+# conti_factor = ['age', 'HE_BMI', 'HE_wc', 'HE_sbp', 'HE_dbp']
+conti_factor = ['age', 'HE_BMI', 'HE_wc', 'HE_PLS']
 
 # 모름/무응답 drop
 for year in df_list:
@@ -94,7 +96,6 @@ for year in df_list:
     df_list[year] = df_list[year].query('marri_1 <= 2')
     df_list[year] = df_list[year].query('house <= 3')
     df_list[year] = df_list[year].query('BP8 <= 24')
-
     # df_list[year] = df_list[year].query('marri_2 <= 8')
     # df_list[year] = df_list[year].query('Total_slp_wk <= 1440') # 24시간 이상인 사람 배제
     # df_list[year] = df_list[year].query('BE8_1 <= 24') # 24시간 이상인 사람 배제
@@ -115,16 +116,12 @@ for year in df_list:
 # 부모형제자매 가족력 여부 변수 생성
 def isHPfh(he_hpfh1, he_hpfh2, he_hpfh3):
     return ((he_hpfh1 == 1) | (he_hpfh2 == 1) | (he_hpfh3 == 1))
-
 def isHLfh(he_hlfh1, he_hlfh2, he_hlfh3):
     return ((he_hlfh1 == 1) | (he_hlfh2 == 1) | (he_hlfh3 == 1))
-
 def isDMfh(he_dmfh1, he_dmfh2, he_dmfh3):
     return ((he_dmfh1 == 1) | (he_dmfh2 == 1) | (he_dmfh3 == 1))
-
 def isIHDfh(he_ihdfh1, he_ihdfh2, he_ihdfh3):
     return ((he_ihdfh1 == 1) | (he_ihdfh2 == 1) | (he_ihdfh3 == 1))
-
 def isSTRfh(he_strfh1, he_strfh2, he_strfh3):
     return ((he_strfh1 == 1) | (he_strfh2 == 1) | (he_strfh3 == 1))
 
@@ -144,51 +141,24 @@ for year in df_list:
 # BE5_1 : 1주일간 근력운동 일수
 # region : 17개 시도
 # town_t : 동/읍면 구분
-cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'ho_incm', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens', 'region', 'town_t']
-# cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens']
+# # categorical age
+# def categorize_age(x):
+#     if x < 30:
+#         return 0
+#     elif x < 40:
+#         return 1
+#     elif x < 50:
+#         return 2
+#     elif x < 60:
+#         return 3
+#     elif x < 70:
+#         return 4
+#     else:
+#         return 5
 
+# for year in df_list:
+#     df_list[year]['age_cat'] = df_list[year].apply(lambda x: categorize_age(x['age']), axis = 1)
 
+# cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'ho_incm', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_DMfh', 'HE_HLfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens', 'region', 'town_t']
+cate_factor = ['sex', 'edu', 'HE_HPfh', 'HE_DMfh', 'HE_mens']
 
-# conti_factor = ['age', 'HE_BMI', 'HE_PLS', 'HE_wc', 'HE_sbp', 'HE_dbp', 'BP8']
-# cate_factor = ['sex', 'BD1_11', 'BD2_1', 'BS3_1', 'BE3_31', 'BE5_1', 'ho_incm', 'marri_1', 'house', 'edu', 'HE_HPfh', 'HE_HLfh', 'HE_DMfh', 'HE_IHDfh', 'HE_STRfh', 'HE_mens', 'region', 'town_t']
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# BE3_11 : 1주일간 격렬한 신체활동 일수; 7기에 없음; 2014, 2015 (6기)에도 없음
-# BE3_21 : 1주일간 중등도 신체활동 일수; 7기에 없음; 2014, 2015 (6기)에도 없음
-# BE3_31 : 1주일간 걷기 일수
-# 이 신체활동 변수들 쓰면 안되겠음; 결측치가 너무 많음;
-# for year in ['2014', '2015', '2016', '2017', '2018']:
-#     print(year)
-#     print(df_list[year].shape[0])
-#     df_list[year] = df_list[year].query('BE3_72 < 8')
-#     print(df_list[year].shape[0])
-#     df_list[year] = df_list[year].query('BE3_76 < 8')
-#     print(df_list[year].shape[0])
-#     df_list[year] = df_list[year].query('BE3_82 < 8')
-#     print(df_list[year].shape[0])
-#     df_list[year] = df_list[year].query('BE3_86 < 8')
-#     print(df_list[year].shape[0])
-#     df_list[year]['BE3_11'] = [sum([be3_72, be3_76]) if (sum([be3_72, be3_76]) <= 7) else 7 for (be3_72, be3_76) in zip(df_list[year]['BE3_72'], df_list[year]['BE3_76'])]
-#     df_list[year]['BE3_21'] = [sum([be3_82, be3_86]) if (sum([be3_82, be3_86]) <= 7) else 7 for (be3_82, be3_86) in zip(df_list[year]['BE3_82'], df_list[year]['BE3_86'])]
-# for year in ['2010', '2011', '2012', '2013']:
-#     df_list[year] = df_list[year].query('BE3_11 <= 8 & BE3_21 <= 8 & BE3_31 <= 8')

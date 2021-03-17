@@ -7,20 +7,21 @@ from sklearn.model_selection import train_test_split
 # from refine_knhanes import conti_factor, cate_factor, disease, df_list
 
 ######################################################################## 성별 바꿀때마다 바꿔주기
-sex = 2
+sex = 1
 cate_factor_tmp = copy.copy(cate_factor)
 
 # concatenate dictionary into one df
 tmp = {}
 for year in df_list:
-    tmp[year] = df_list[year][conti_factor + cate_factor + [disease]].dropna()
+    tmp[year] = df_list[year][conti_factor + cate_factor_tmp + [disease]].dropna()
 df = pd.concat(tmp.values())
 
 ######################################################################## 성별 바꿀때마다 바꿔주기
-df = df.query('sex == 2')
+df = df.query('sex == 1')
 # sex drop
 df = df.drop('sex', axis = 1)
 cate_factor_tmp.remove('sex')
+
 # 생리여부 drop
 if sex == 1:
     df = df.drop('HE_mens', axis = 1)
@@ -43,7 +44,7 @@ scalar = StandardScaler()
 scalar.fit(df_X.iloc[:, :conti_count])
 df_X.iloc[:, :conti_count] = scalar.transform(df_X.iloc[:, :conti_count])
 # parameters : random_state = seed
-X_train, X_val, Y_train, Y_val = train_test_split(df_X, df_Y, test_size=0.25)
+X_train, X_val, Y_train, Y_val = train_test_split(df_X, df_Y, test_size=0.25, random_state=2021)
 
 print(X_train.columns)
 print(X_train.shape)

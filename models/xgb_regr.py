@@ -41,7 +41,7 @@ xgb.plot_importance(xg_reg)
 plt.rcParams['figure.figsize'] = [5, 5]
 plt.show()
 
-# ㅇㅃ
+# # ㅇㅃ
 # dad = [[57, 24.96494647925858, 20, 80, 5.5, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0]]
 # X_dad = pd.DataFrame(dad, columns = X_train.columns)
 # xg_reg.predict(X_dad)
